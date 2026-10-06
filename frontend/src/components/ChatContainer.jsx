@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { Trash2 } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
 import { useChatStore } from "../store/useChatStore";
 import ChatHeader from "./ChatHeader";
@@ -14,6 +15,7 @@ function ChatContainer() {
     isMessagesLoading,
     subscribeToMessages,
     unsubscribeFromMessages,
+    deleteMessage,
   } = useChatStore();
   const { authUser } = useAuthStore();
   const messageEndRef = useRef(null);
@@ -60,6 +62,20 @@ function ChatContainer() {
                       minute: "2-digit",
                     })}
                   </p>
+
+                {msg.senderId === authUser._id && !msg.isOptimistic && (
+    <button
+      onClick={() => {
+        if (window.confirm("Are you sure you want to delete this message?")) {
+          deleteMessage(msg._id);
+        }
+      }}
+      className="absolute -top-3 -right-3 bg-slate-900 hover:bg-red-600 text-white rounded-full p-1.5 transition-colors"
+      title="Delete message"
+    >
+      <Trash2 size={14} />
+    </button>
+  )}
                 </div>
               </div>
             ))}
